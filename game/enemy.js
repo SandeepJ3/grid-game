@@ -4,21 +4,6 @@ import { isInsideGrid, isBlocked, isBox, isLockedDoor } from "./collision.js";
 // 1. Generate the four neighbouring positions
 function getNeighborCells() {
     let dxy = [[0,0],[-1,0],[0,-1],[0,1],[1,0]];
-    /*
-    let priority = [];
-    for (let i=0; i < dxy.length; i++){
-        let u = state.enemy.row + dxy[i][0];
-        let v = state.enemy.col + dxy[i][1];
-        if (isValidMove(u,v)) {
-            let val = Math.abs(state.player.row - u) + 
-            Math.abs(state.player.col - v);
-            priority.push([val,u,v]);
-        }
-    }
-    priority.sort();
-    return [priority[0][1],priority[0][2]];
-    */
-
     let grid = []
 
     for(let i = 0 ; i < state.SIZE ; i++){
@@ -35,8 +20,9 @@ function getNeighborCells() {
         }
         grid.push(gridRow);
     }
-
+    
     const playerRow = state.player.row , playerCol = state.player.col ;
+    grid[playerRow][playerCol] = 0;
     let queue = [[0,playerRow,playerCol]] ; 
     
     while (queue.length > 0){
@@ -47,9 +33,11 @@ function getNeighborCells() {
             const dx = u + x ; 
             const dy = v + y ;
 
-            if (isValidMove(dx,dy) &&
-                grid[dx][dy] === Number.MIN_VALUE
-            ) {
+            if(
+            0 <= dx && dx < state.SIZE &&
+            0 <= dy && dy < state.SIZE &&
+            grid[dx][dy] === Number.MIN_VALUE
+        ) {
                 queue.push([dist+1,dx,dy]) ; 
                 grid[dx][dy] = dist + 1;
             }
